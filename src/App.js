@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useCallback, useState } from "react"
+import "./App.css"
+import Square from "./components/Square"
+import { DndProvider } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
+import { TouchBackend } from "react-dnd-touch-backend"
+import { CustomDragLayer } from "./components/CustomDragLayer"
+import { Container } from "./components/Container"
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    const [snapToGridAfterDrop, setSnapToGridAfterDrop] = useState(true)
+    const [snapToGridWhileDragging, setSnapToGridWhileDragging] = useState(
+        false
+    )
+
+    const handleSnapToGridAfterDropChange = useCallback(() => {
+        setSnapToGridAfterDrop(!snapToGridAfterDrop)
+    }, [snapToGridAfterDrop])
+
+    const handleSnapToGridWhileDraggingChange = useCallback(() => {
+        setSnapToGridWhileDragging(!snapToGridWhileDragging)
+    }, [snapToGridWhileDragging])
+
+    return (
+        <DndProvider
+            backend={TouchBackend}
+            options={{ enableMouseEvents: true }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+            <Container snapToGrid={snapToGridAfterDrop} />
+            <CustomDragLayer snapToGrid={snapToGridWhileDragging} />
+        </DndProvider>
+    )
 }
 
-export default App;
+export default App
